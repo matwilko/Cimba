@@ -27,7 +27,7 @@
 using System;
 
 
-namespace Xna.Support.Resharper
+namespace Cimba.Resharper
 {
     /// <summary>
     /// Indicates that marked element should be localized or not.

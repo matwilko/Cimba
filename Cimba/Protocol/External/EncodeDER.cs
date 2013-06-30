@@ -28,7 +28,7 @@
             byte[] returnbytes;
             if (input != 0)
             {
-                byte[] intbytes = BitConverterBE.GetBytes(input);
+                byte[] intbytes = BitConverterBigEndian.GetBytes(input);
                 byte numbytes = 0;
                 while (numbytes < intbytes.Length && intbytes[numbytes] == 0x00)
                 {
@@ -156,19 +156,19 @@
             else if (length <= 0xFFFF)
             {
                 byte[] bytes = new byte[3] { 130, 0, 0 };
-                BitConverterBE.GetBytes((ushort)length).CopyTo(bytes, 1);
+                BitConverterBigEndian.GetBytes((ushort)length).CopyTo(bytes, 1);
                 return bytes;
             }
             else if (length <= 0xFFFFFF)
             {
                 byte[] bytes = new byte[4] { 131, 0, 0, 0 };
-                Array.Copy(BitConverterBE.GetBytes((uint)length), 1, bytes, 1, 3);
+                Array.Copy(BitConverterBigEndian.GetBytes((uint)length), 1, bytes, 1, 3);
                 return bytes;
             }
             else
             {
                 byte[] bytes = new byte[5] { 132, 0, 0, 0, 0 };
-                BitConverterBE.GetBytes((uint)length).CopyTo(bytes, 1);
+                BitConverterBigEndian.GetBytes((uint)length).CopyTo(bytes, 1);
                 return bytes;
             }
         }
@@ -187,7 +187,7 @@
         private static byte[] Encode7BitInteger(uint input, byte markend = 0x80)
         {
             Contract.Requires(markend == 0x80 || markend == 0x7F);
-            byte[] bytes = BitConverterBE.GetBytes(input);
+            byte[] bytes = BitConverterBigEndian.GetBytes(input);
             byte intstart = 0;
             while (intstart < 4 && bytes[intstart] == 0x00)
             {

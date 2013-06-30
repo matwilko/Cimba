@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -73,7 +74,7 @@
     <Compile Include="JetBrains.Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\AccessMask.cs" />
-    <Compile Include="Protocol\BitConverterBE.cs" />
+    <Compile Include="Protocol\BitConverterBigEndian.cs" />
     <Compile Include="Protocol\BitConverterLE.cs" />
     <Compile Include="Protocol\ChangeNotify.cs" />
     <Compile Include="Protocol\Create.cs" />
@@ -168,6 +169,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <CodeAnalysisDictionary Include="CodeAnalysisDictionary.xml" />
     <Content Include="lib\BouncyCastle.Crypto.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

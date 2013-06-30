@@ -1,6 +1,6 @@
 ﻿namespace Cimba.Protocol.External
 {
-    internal class ASN1
+    internal static class ASN1
     {
         internal enum IdentClass : byte
         {

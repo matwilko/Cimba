@@ -33,17 +33,17 @@
             }
             else if (integer.Length == 2)
             {
-                return BitConverterBE.ToUShort(integer, 0);
+                return BitConverterBigEndian.ToUShort(integer, 0);
             }
             else if (integer.Length == 3)
             {
                 byte[] newbytes = new byte[4];
                 integer.CopyTo(newbytes, 0);
-                return (int)BitConverterBE.ToUInt(newbytes, 0);
+                return (int)BitConverterBigEndian.ToUInt(newbytes, 0);
             }
             else if (integer.Length == 4)
             {
-                return (int)BitConverterBE.ToUInt(integer, 0);
+                return (int)BitConverterBigEndian.ToUInt(integer, 0);
             }
             else
             {
@@ -219,17 +219,17 @@
                 }
                 else if (numoctets == 2)
                 {
-                    return BitConverterBE.ToUShort(length, 0);
+                    return BitConverterBigEndian.ToUShort(length, 0);
                 }
                 else if (numoctets == 3)
                 {
                     byte[] newbytes = new byte[4];
                     length.CopyTo(newbytes, 0);
-                    return (int)BitConverterBE.ToUInt(newbytes, 0);
+                    return (int)BitConverterBigEndian.ToUInt(newbytes, 0);
                 }
                 else if (numoctets == 4)
                 {
-                    return (int)BitConverterBE.ToUInt(length, 0);
+                    return (int)BitConverterBigEndian.ToUInt(length, 0);
                 }
                 else
                 {
