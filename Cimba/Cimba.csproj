@@ -34,6 +34,9 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,13 +49,107 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
+    <Compile Include="Client\SMBClient.cs" />
+    <Compile Include="Client\SMBClientConnection.cs" />
+    <Compile Include="Client\SMBClientCredentials.cs" />
+    <Compile Include="Client\SMBClientFile.cs" />
+    <Compile Include="Client\SMBClientOpen.cs" />
+    <Compile Include="Client\SMBClientOpen_Directory.cs" />
+    <Compile Include="Client\SMBClientOpen_File.cs" />
+    <Compile Include="Client\SMBClientRequest.cs" />
+    <Compile Include="Client\SMBClientSession.cs" />
+    <Compile Include="Client\SMBClientTreeConnect.cs" />
+    <Compile Include="Client\SMBClientTreeConnect_Pipe.cs" />
+    <Compile Include="Client\SMBClientTreeConnect_Printer.cs" />
+    <Compile Include="Client\SMBClientTreeConnect_Share.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="ERREF.cs" />
+    <Compile Include="Exceptions\SMBConnectionException.cs" />
+    <Compile Include="Exceptions\SMBPacketException.cs" />
+    <Compile Include="Exceptions\SMBProtocolException.cs" />
+    <Compile Include="Exceptions\SMBSessionException.cs" />
+    <Compile Include="Exceptions\SMBTreeConnectException.cs" />
+    <Compile Include="IPEndPointComparer.cs" />
     <Compile Include="JetBrains.Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\AccessMask.cs" />
+    <Compile Include="Protocol\BitConverterBE.cs" />
+    <Compile Include="Protocol\BitConverterLE.cs" />
+    <Compile Include="Protocol\ChangeNotify.cs" />
+    <Compile Include="Protocol\Create.cs" />
+    <Compile Include="Protocol\Error.cs" />
+    <Compile Include="Protocol\External\ASN1.cs" />
+    <Compile Include="Protocol\External\DecodeDER.cs" />
+    <Compile Include="Protocol\External\EncodeDER.cs" />
+    <Compile Include="Protocol\External\Microsoft\FSCC.cs" />
+    <Compile Include="Protocol\External\Microsoft\NTLM2.cs" />
+    <Compile Include="Protocol\External\Microsoft\SPNG.cs" />
+    <Compile Include="Protocol\LeaseBreak.cs" />
+    <Compile Include="Protocol\Lock.cs" />
+    <Compile Include="Protocol\Negotiate.cs" />
+    <Compile Include="Protocol\Oplock.cs" />
+    <Compile Include="Protocol\Packet.cs" />
+    <Compile Include="Protocol\QueryDirectory.cs" />
+    <Compile Include="Protocol\QueryInfo.cs" />
+    <Compile Include="Protocol\request\Cancel.cs" />
+    <Compile Include="Protocol\request\ChangeNotify.cs" />
+    <Compile Include="Protocol\request\Close.cs" />
+    <Compile Include="Protocol\request\Create.cs" />
+    <Compile Include="Protocol\request\Echo.cs" />
+    <Compile Include="Protocol\request\Flush.cs" />
+    <Compile Include="Protocol\request\IOCTL.cs" />
+    <Compile Include="Protocol\request\LeaseBreak.cs" />
+    <Compile Include="Protocol\request\Lock.cs" />
+    <Compile Include="Protocol\request\Logoff.cs" />
+    <Compile Include="Protocol\request\Negotiate.cs" />
+    <Compile Include="Protocol\request\OplockBreak.cs" />
+    <Compile Include="Protocol\request\QueryDirectory.cs" />
+    <Compile Include="Protocol\request\QueryInfo.cs" />
+    <Compile Include="Protocol\request\Read.cs" />
+    <Compile Include="Protocol\request\Session_Setup.cs" />
+    <Compile Include="Protocol\request\SetInfo.cs" />
+    <Compile Include="Protocol\request\TreeConnect.cs" />
+    <Compile Include="Protocol\request\TreeDisconnect.cs" />
+    <Compile Include="Protocol\request\Write.cs" />
+    <Compile Include="Protocol\response\ChangeNotify.cs" />
+    <Compile Include="Protocol\response\Close.cs" />
+    <Compile Include="Protocol\response\Create.cs" />
+    <Compile Include="Protocol\response\Echo.cs" />
+    <Compile Include="Protocol\response\Flush.cs" />
+    <Compile Include="Protocol\response\IOCTL.cs" />
+    <Compile Include="Protocol\response\LeaseBreak.cs" />
+    <Compile Include="Protocol\response\Lock.cs" />
+    <Compile Include="Protocol\response\Logoff.cs" />
+    <Compile Include="Protocol\response\Negotiate.cs" />
+    <Compile Include="Protocol\response\Oplock_Break.cs" />
+    <Compile Include="Protocol\response\QueryDirectory.cs" />
+    <Compile Include="Protocol\response\QueryInfo.cs" />
+    <Compile Include="Protocol\response\Read.cs" />
+    <Compile Include="Protocol\response\Session_Setup.cs" />
+    <Compile Include="Protocol\response\SetInfo.cs" />
+    <Compile Include="Protocol\response\TreeDisconnect.cs" />
+    <Compile Include="Protocol\response\Tree_Connect.cs" />
+    <Compile Include="Protocol\response\Write.cs" />
+    <Compile Include="Protocol\SetInfo.cs" />
+    <Compile Include="Protocol\SmbComNegotiate.cs" />
     <Compile Include="Resources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Server\Enums.cs" />
+    <Compile Include="Server\SmbServer.cs" />
+    <Compile Include="Server\SmbServerConnection.cs" />
+    <Compile Include="Server\SmbServerDirectoryListing.cs" />
+    <Compile Include="Server\SmbServerOpen.cs" />
+    <Compile Include="Server\SmbServerOpenHandle.cs" />
+    <Compile Include="Server\SmbServerOpenHandle_Directory.cs" />
+    <Compile Include="Server\SmbServerOpenHandle_File.cs" />
+    <Compile Include="Server\SmbServerSession.cs" />
+    <Compile Include="Server\SmbServerShare.cs" />
+    <Compile Include="Server\SmbServerShare_Disk.cs" />
+    <Compile Include="Server\SmbServerShare_Pipe.cs" />
+    <Compile Include="Server\SmbServerTreeConnect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AssemblyVersion.tt">
@@ -69,6 +166,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\BouncyCastle.Crypto.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
