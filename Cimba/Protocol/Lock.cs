@@ -24,9 +24,9 @@
         internal byte[] Flatten()
         {
             byte[] buffer = new byte[24];
-            BitConverterLE.GetBytes(this.Offset).CopyTo(buffer, 0);
-            BitConverterLE.GetBytes(this.Length).CopyTo(buffer, 8);
-            BitConverterLE.GetBytes(this.Flags).CopyTo(buffer, 16);
+            BitConverterLittleEndian.GetBytes(this.Offset).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes(this.Length).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes(this.Flags).CopyTo(buffer, 16);
             return buffer;
         }
     }

@@ -16,16 +16,16 @@
         {
             QueryDirectoryResponse packet = new QueryDirectoryResponse();
 
-            if (BitConverterLE.ToUShort(stream) != 9)
+            if (BitConverterLittleEndian.ToUShort(stream) != 9)
             {
                 throw new SmbPacketException("Invalid QueryDirectoryResponse");
             }
 
             // OutputBufferOffset (2 bytes)
-            int outputBufferOffset = BitConverterLE.ToUShort(stream);
+            int outputBufferOffset = BitConverterLittleEndian.ToUShort(stream);
 
             // OutputBufferLength (4 bytes)
-            uint outputBufferLength = BitConverterLE.ToUInt(stream);
+            uint outputBufferLength = BitConverterLittleEndian.ToUInt(stream);
 
             // Buffer (variable)
             packet.Buffer = new byte[outputBufferLength];
@@ -40,13 +40,13 @@
             byte[] buffer = new byte[8 + this.Buffer.Length];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)9).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)9).CopyTo(buffer, 0);
 
             // OutputBufferOffset (2 bytes)
-            BitConverterLE.GetBytes((ushort)Packet.HeaderLength + 8).CopyTo(buffer, 2);
+            BitConverterLittleEndian.GetBytes((ushort)Packet.HeaderLength + 8).CopyTo(buffer, 2);
 
             // OutputBufferLength (4 bytes)
-            BitConverterLE.GetBytes((uint)this.Buffer.Length).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((uint)this.Buffer.Length).CopyTo(buffer, 4);
 
             // Buffer (variable)
             this.Buffer.CopyTo(buffer, 8);

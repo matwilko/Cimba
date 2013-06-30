@@ -23,7 +23,7 @@
         internal static CloseRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 24)
+            if (BitConverterLittleEndian.ToUShort(stream) != 24)
             {
                 throw new SmbPacketException("Invalid CloseRequest");
             }
@@ -31,7 +31,7 @@
             CloseRequest packet = new CloseRequest();
 
             // Flags (2 bytes)
-            packet.CorrectAttributes = BitConverterLE.ToUShort(stream) == 0x0001;
+            packet.CorrectAttributes = BitConverterLittleEndian.ToUShort(stream) == 0x0001;
 
             // Reserved (4 bytes) - MUST NOT be used, MUST be reserved - server MUST ignore on receipt
             stream.Seek(4, SeekOrigin.Current);
@@ -49,16 +49,16 @@
             byte[] buffer = new byte[24];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)24).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)24).CopyTo(buffer, 0);
 
             // Flags (2 bytes)
             if (this.CorrectAttributes)
             {
-                BitConverterLE.GetBytes((ushort)0x0001).CopyTo(buffer, 2);
+                BitConverterLittleEndian.GetBytes((ushort)0x0001).CopyTo(buffer, 2);
             }
             else
             {
-                BitConverterLE.GetBytes((ushort)0).CopyTo(buffer, 2);
+                BitConverterLittleEndian.GetBytes((ushort)0).CopyTo(buffer, 2);
             }
 
             // Reserved (4 bytes)

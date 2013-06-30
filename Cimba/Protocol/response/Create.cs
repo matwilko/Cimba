@@ -45,7 +45,7 @@
         internal static CreateResponse Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 89)
+            if (BitConverterLittleEndian.ToUShort(stream) != 89)
             {
                 throw new SmbPacketException("Bad CreateResponse packet");
             }
@@ -59,40 +59,40 @@
             stream.Seek(1, SeekOrigin.Current);
 
             // CreateAction (4 bytes)
-            packet.CreateAction = (Create_Action)BitConverterLE.ToUInt(stream);
+            packet.CreateAction = (Create_Action)BitConverterLittleEndian.ToUInt(stream);
 
             // CreationTime (8 bytes)
-            packet.CreationTime = BitConverterLE.ToULong(stream);
+            packet.CreationTime = BitConverterLittleEndian.ToULong(stream);
 
             // LastAccessTime (8 bytes)
-            packet.LastAccessTime = BitConverterLE.ToULong(stream);
+            packet.LastAccessTime = BitConverterLittleEndian.ToULong(stream);
 
             // LastWriteTime (8 bytes)
-            packet.LastWriteTime = BitConverterLE.ToULong(stream);
+            packet.LastWriteTime = BitConverterLittleEndian.ToULong(stream);
 
             // ChangeTime (8 bytes)
-            packet.ChangeTime = BitConverterLE.ToULong(stream);
+            packet.ChangeTime = BitConverterLittleEndian.ToULong(stream);
 
             // AllocationSize (8 bytes)
-            packet.AllocationSize = BitConverterLE.ToULong(stream);
+            packet.AllocationSize = BitConverterLittleEndian.ToULong(stream);
 
             // EndofFile (8 bytes)
-            packet.EndOfFile = BitConverterLE.ToULong(stream);
+            packet.EndOfFile = BitConverterLittleEndian.ToULong(stream);
 
             // FileAttributes (4 bytes)
-            packet.FileAttributes = (FSCC.FILE_ATTRIBUTE)BitConverterLE.ToUInt(stream);
+            packet.FileAttributes = (FSCC.FILE_ATTRIBUTE)BitConverterLittleEndian.ToUInt(stream);
 
             // Reserved2 (4 bytes)
             stream.Seek(4, SeekOrigin.Current);
 
             // FileId (16 bytes)
-            packet.FileId = new FILE_ID(BitConverterLE.ToULong(stream), BitConverterLE.ToULong(stream));
+            packet.FileId = new FILE_ID(BitConverterLittleEndian.ToULong(stream), BitConverterLittleEndian.ToULong(stream));
 
             // CreateContextsOffset (4 bytes)
-            uint createContextsOffset = BitConverterLE.ToUInt(stream);
+            uint createContextsOffset = BitConverterLittleEndian.ToUInt(stream);
 
             // CreateContextsLength (4 bytes)
-            uint createContextsLength = BitConverterLE.ToUInt(stream);
+            uint createContextsLength = BitConverterLittleEndian.ToUInt(stream);
 
             stream.Seek(createContextsOffset, SeekOrigin.Begin);
             byte[] createcontexts = new byte[createContextsLength];
@@ -108,7 +108,7 @@
             byte[] buffer = new byte[88 + createContexts.Length];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)89).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)89).CopyTo(buffer, 0);
 
             // OplockLevel (1 byte)
             buffer[2] = (byte)this.OplockLevel;
@@ -117,40 +117,40 @@
             buffer[3] = 0;
 
             // CreateAction (4 bytes)
-            BitConverterLE.GetBytes((uint)this.CreateAction).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((uint)this.CreateAction).CopyTo(buffer, 4);
 
             // CreationTime (8 bytes)
-            BitConverterLE.GetBytes(this.CreationTime).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes(this.CreationTime).CopyTo(buffer, 8);
 
             // LastAccessTime (8 bytes)
-            BitConverterLE.GetBytes(this.LastAccessTime).CopyTo(buffer, 16);
+            BitConverterLittleEndian.GetBytes(this.LastAccessTime).CopyTo(buffer, 16);
 
             // LastWriteTime (8 bytes)
-            BitConverterLE.GetBytes(this.LastWriteTime).CopyTo(buffer, 24);
+            BitConverterLittleEndian.GetBytes(this.LastWriteTime).CopyTo(buffer, 24);
 
             // ChangeTime (8 bytes)
-            BitConverterLE.GetBytes(this.ChangeTime).CopyTo(buffer, 32);
+            BitConverterLittleEndian.GetBytes(this.ChangeTime).CopyTo(buffer, 32);
 
             // AllocationSize (8 bytes)
-            BitConverterLE.GetBytes(this.AllocationSize).CopyTo(buffer, 40);
+            BitConverterLittleEndian.GetBytes(this.AllocationSize).CopyTo(buffer, 40);
 
             // EndOfFile (8 bytes)
-            BitConverterLE.GetBytes(this.EndOfFile).CopyTo(buffer, 48);
+            BitConverterLittleEndian.GetBytes(this.EndOfFile).CopyTo(buffer, 48);
 
             // FileAttributes (4 bytes)
-            BitConverterLE.GetBytes((uint)this.FileAttributes).CopyTo(buffer, 56);
+            BitConverterLittleEndian.GetBytes((uint)this.FileAttributes).CopyTo(buffer, 56);
 
             // Reserved2 (4 bytes) - MUST NOT be used and MUSt be reserved
-            BitConverterLE.GetBytes((uint)0).CopyTo(buffer, 60);
+            BitConverterLittleEndian.GetBytes((uint)0).CopyTo(buffer, 60);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(buffer, 64);
 
             // CreateContextsOffset (4 bytes)
-            BitConverterLE.GetBytes((uint)88).CopyTo(buffer, 80);
+            BitConverterLittleEndian.GetBytes((uint)88).CopyTo(buffer, 80);
 
             // CreateContextsLength (4 bytes)
-            BitConverterLE.GetBytes((uint)createContexts.Length).CopyTo(buffer, 84);
+            BitConverterLittleEndian.GetBytes((uint)createContexts.Length).CopyTo(buffer, 84);
 
             createContexts.CopyTo(buffer, 88);
 

@@ -29,11 +29,11 @@
             byte[] buffer = new byte[48 + this.OUT.Length];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)49).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)49).CopyTo(buffer, 0);
 
             // Reserved (2 bytes)
             // CtlCode (4 bytes)
-            BitConverterLE.GetBytes(this.CtlCode).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes(this.CtlCode).CopyTo(buffer, 4);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(buffer, 8);
@@ -41,7 +41,7 @@
             // InputOffset (4 bytes)
             // InputCount (4 bytes)
             // OutputOffset (4 bytes)
-            BitConverterLE.GetBytes((uint)48).CopyTo(buffer, 32);
+            BitConverterLittleEndian.GetBytes((uint)48).CopyTo(buffer, 32);
 
             // OutputCount (4 bytes)
             BitConverter.GetBytes((uint)this.OUT.Length).CopyTo(buffer, 36);

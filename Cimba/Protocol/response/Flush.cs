@@ -12,7 +12,7 @@
 
         internal static FlushResponse Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 4)
+            if (BitConverterLittleEndian.ToUShort(stream) != 4)
             {
                 throw new SmbPacketException("Invalid FlushResponse");
             }
@@ -25,10 +25,10 @@
             byte[] buffer = new byte[4];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)4).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)4).CopyTo(buffer, 0);
 
             // Reserved (2 bytes)
-            BitConverterLE.GetBytes((ushort)0).CopyTo(buffer, 2);
+            BitConverterLittleEndian.GetBytes((ushort)0).CopyTo(buffer, 2);
 
             return buffer;
         }

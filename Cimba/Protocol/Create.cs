@@ -82,11 +82,11 @@
         internal static Create_Create_Context Unflatten(byte[] buffer)
         {
             Create_Create_Context context = new Create_Create_Context();
-            context.Next = BitConverterLE.ToUInt(buffer, 0);
-            context.NameOffset = BitConverterLE.ToUShort(buffer, 4);
-            context.NameLength = BitConverterLE.ToUShort(buffer, 6);
-            context.DataOffset = BitConverterLE.ToUShort(buffer, 10);
-            context.DataLength = BitConverterLE.ToUShort(buffer, 12);
+            context.Next = BitConverterLittleEndian.ToUInt(buffer, 0);
+            context.NameOffset = BitConverterLittleEndian.ToUShort(buffer, 4);
+            context.NameLength = BitConverterLittleEndian.ToUShort(buffer, 6);
+            context.DataOffset = BitConverterLittleEndian.ToUShort(buffer, 10);
+            context.DataLength = BitConverterLittleEndian.ToUShort(buffer, 12);
             context.Buffer = new byte[buffer.Length - 16];
             Array.Copy(buffer, 16, context.Buffer, 0, context.Buffer.Length);
             return context;
@@ -100,7 +100,7 @@
                 uint next = 0;
                 do
                 {
-                    uint length = BitConverterLE.ToUInt(buffer, 0) - next;
+                    uint length = BitConverterLittleEndian.ToUInt(buffer, 0) - next;
                     byte[] tempbuffer = new byte[length];
                     Array.Copy(buffer, next, tempbuffer, 0, length);
                     returnlist.Add(Unflatten(tempbuffer));
@@ -171,11 +171,11 @@
         internal byte[] Flatten()
         {
             byte[] buffer = new byte[this.Size()];
-            BitConverterLE.GetBytes(this.Next).CopyTo(buffer, 0);
-            BitConverterLE.GetBytes(this.NameOffset).CopyTo(buffer, 4);
-            BitConverterLE.GetBytes(this.NameLength).CopyTo(buffer, 6);
-            BitConverterLE.GetBytes(this.DataOffset).CopyTo(buffer, 10);
-            BitConverterLE.GetBytes(this.DataLength).CopyTo(buffer, 12);
+            BitConverterLittleEndian.GetBytes(this.Next).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes(this.NameOffset).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes(this.NameLength).CopyTo(buffer, 6);
+            BitConverterLittleEndian.GetBytes(this.DataOffset).CopyTo(buffer, 10);
+            BitConverterLittleEndian.GetBytes(this.DataLength).CopyTo(buffer, 12);
             this.Buffer.CopyTo(buffer, 16);
             return buffer;
         }
@@ -195,8 +195,8 @@
         internal FILE_ID(byte[] bytestream)
         {
             Contract.Requires(bytestream.Length == 16);
-            this.Persistent = BitConverterLE.ToULong(bytestream, 0);
-            this.Volatile = BitConverterLE.ToULong(bytestream, 8);
+            this.Persistent = BitConverterLittleEndian.ToULong(bytestream, 0);
+            this.Volatile = BitConverterLittleEndian.ToULong(bytestream, 8);
         }
 
         public static bool operator ==(FILE_ID a, FILE_ID b)
@@ -216,14 +216,14 @@
 
         public override int GetHashCode()
         {
-            return BitConverterLE.ToInt(System.Security.Cryptography.MD5.Create().ComputeHash(BitConverterLE.GetBytes(this.Volatile * this.Persistent)), 0);
+            return BitConverterLittleEndian.ToInt(System.Security.Cryptography.MD5.Create().ComputeHash(BitConverterLittleEndian.GetBytes(this.Volatile * this.Persistent)), 0);
         }
 
         internal byte[] Flatten()
         {
             byte[] buffer = new byte[16];
-            BitConverterLE.GetBytes(this.Persistent).CopyTo(buffer, 0);
-            BitConverterLE.GetBytes(this.Volatile).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes(this.Persistent).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes(this.Volatile).CopyTo(buffer, 8);
             return buffer;
         }
     }

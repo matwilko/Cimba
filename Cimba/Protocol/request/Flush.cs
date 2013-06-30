@@ -20,7 +20,7 @@
         internal static FlushRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 24)
+            if (BitConverterLittleEndian.ToUShort(stream) != 24)
             {
                 throw new SmbPacketException("Invalid FlushRequest");
             }
@@ -46,13 +46,13 @@
             byte[] buffer = new byte[24];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)24).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)24).CopyTo(buffer, 0);
 
             // Reserved1 (2 bytes)
             // Reserved2 (4 bytes)
             // FileId (16 bytes)
-            BitConverterLE.GetBytes(this.FileId.Persistent).CopyTo(buffer, 8);
-            BitConverterLE.GetBytes(this.FileId.Volatile).CopyTo(buffer, 16);
+            BitConverterLittleEndian.GetBytes(this.FileId.Persistent).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes(this.FileId.Volatile).CopyTo(buffer, 16);
 
             return buffer;
         }

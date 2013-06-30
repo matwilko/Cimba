@@ -45,9 +45,9 @@
         internal static FILE_NOTIFY_INFORMATION Read(byte[] buffer, int offset = 0)
         {
             FILE_NOTIFY_INFORMATION fni = new FILE_NOTIFY_INFORMATION();
-            fni.NextEntryOffset = BitConverterLE.ToUInt(buffer, offset + 0);
-            fni.Action = BitConverterLE.ToUInt(buffer, offset + 4);
-            uint fileNameLength = BitConverterLE.ToUInt(buffer, offset + 8);
+            fni.NextEntryOffset = BitConverterLittleEndian.ToUInt(buffer, offset + 0);
+            fni.Action = BitConverterLittleEndian.ToUInt(buffer, offset + 4);
+            uint fileNameLength = BitConverterLittleEndian.ToUInt(buffer, offset + 8);
             byte[] namebuffer = new byte[fileNameLength];
             Array.Copy(buffer, offset + 12, namebuffer, 0, fileNameLength);
             fni.FileName = Encoding.Unicode.GetString(namebuffer);
@@ -74,9 +74,9 @@
             int length = 12 + Encoding.Unicode.GetByteCount(this.FileName);
             length += 8 - (length % 4);
             byte[] buffer = new byte[length];
-            BitConverterLE.GetBytes(this.NextEntryOffset).CopyTo(buffer, 0);
-            BitConverterLE.GetBytes(this.Action).CopyTo(buffer, 4);
-            BitConverterLE.GetBytes((uint)Encoding.Unicode.GetByteCount(this.FileName)).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes(this.NextEntryOffset).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes(this.Action).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((uint)Encoding.Unicode.GetByteCount(this.FileName)).CopyTo(buffer, 8);
             Encoding.Unicode.GetBytes(this.FileName).CopyTo(buffer, 12);
             return buffer;
         }

@@ -342,7 +342,7 @@
             HMACMD5 hmacmd5 = new HMACMD5(sessionKey);
             byte[] mechTypesHash = hmacmd5.ComputeHash(mechTypes);
             byte[] mechListMIC = new byte[16];
-            BitConverterLE.GetBytes((uint)1).CopyTo(mechListMIC, 0);
+            BitConverterLittleEndian.GetBytes((uint)1).CopyTo(mechListMIC, 0);
             Array.Copy(mechTypesHash, 0, mechListMIC, 4, 8);
 
             byte[] responseToken = EncodeDER.EncodeSequence(EncodeDER.EncodeOctetstring(auth_mess), 0x02, ASN1.IdentClass.ContextSpecific);
@@ -369,7 +369,7 @@
             rc4.ProcessBytes(mechTypesHash, 0, 16, checksum, 0);
 
             byte[] mechListMIC = new byte[16];
-            BitConverterLE.GetBytes((uint)1).CopyTo(mechListMIC, 0);
+            BitConverterLittleEndian.GetBytes((uint)1).CopyTo(mechListMIC, 0);
             Array.Copy(checksum, 0, mechListMIC, 4, 8);
             return mechListMIC;
         }

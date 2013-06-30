@@ -46,19 +46,19 @@
             byte[] packet = new byte[65]; // Packet with Buffer[]
             stream.Read(packet, 0, 65);
 
-            ushort structureSize = BitConverterLE.ToUShort(packet, 0);
+            ushort structureSize = BitConverterLittleEndian.ToUShort(packet, 0);
             if (structureSize != 65)
             {
                 throw new SmbPacketException("Negotiate.StructureSize incorrect, received: " + structureSize);
             }
 
-            newpacket.SecurityMode = (Negotiate_SecurityMode)BitConverterLE.ToUShort(packet, 2);
+            newpacket.SecurityMode = (Negotiate_SecurityMode)BitConverterLittleEndian.ToUShort(packet, 2);
             if (!newpacket.SecurityMode.HasFlag(Negotiate_SecurityMode.SigningEnabled))
             {
                 // TODO: Client MUST return STATUS_INVALID_NETWORK_RESPONSE if flag is missing
             }
 
-            newpacket.DialectRevision = BitConverterLE.ToUShort(packet, 4);
+            newpacket.DialectRevision = BitConverterLittleEndian.ToUShort(packet, 4);
 
             // Reserved (2 bytes) - MUST ignore
             // ServerGuid (16 bytes)
@@ -66,15 +66,15 @@
             Array.Copy(packet, 8, guidbytes, 0, 16);
             newpacket.ServerGuid = new Guid(guidbytes);
 
-            newpacket.Capabilities = (Caps)BitConverterLE.ToUInt(packet, 24);
+            newpacket.Capabilities = (Caps)BitConverterLittleEndian.ToUInt(packet, 24);
 
-            newpacket.MaxTransactSize = BitConverterLE.ToUInt(packet, 28);
-            newpacket.MaxReadSize = BitConverterLE.ToUInt(packet, 32);
-            newpacket.MaxWriteSize = BitConverterLE.ToUInt(packet, 36);
-            newpacket.SystemTime = DateTime.FromFileTime(BitConverterLE.ToLong(packet, 40));
-            newpacket.ServerStartTime = DateTime.FromFileTime(BitConverterLE.ToLong(packet, 48));
-            ushort securityBufferOffset = BitConverterLE.ToUShort(packet, 56);
-            ushort securityBufferLength = BitConverterLE.ToUShort(packet, 58);
+            newpacket.MaxTransactSize = BitConverterLittleEndian.ToUInt(packet, 28);
+            newpacket.MaxReadSize = BitConverterLittleEndian.ToUInt(packet, 32);
+            newpacket.MaxWriteSize = BitConverterLittleEndian.ToUInt(packet, 36);
+            newpacket.SystemTime = DateTime.FromFileTime(BitConverterLittleEndian.ToLong(packet, 40));
+            newpacket.ServerStartTime = DateTime.FromFileTime(BitConverterLittleEndian.ToLong(packet, 48));
+            ushort securityBufferOffset = BitConverterLittleEndian.ToUShort(packet, 56);
+            ushort securityBufferLength = BitConverterLittleEndian.ToUShort(packet, 58);
 
             // Reserved2 - MUST ignore
             // Read in buffer
@@ -90,41 +90,41 @@
             byte[] buffer = new byte[64 + this.SecurityBuffer.Length];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)65).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)65).CopyTo(buffer, 0);
 
             // SecurityMode (2 bytes)
-            BitConverterLE.GetBytes((ushort)this.SecurityMode).CopyTo(buffer, 2);
+            BitConverterLittleEndian.GetBytes((ushort)this.SecurityMode).CopyTo(buffer, 2);
 
             // DialectRevision (2 bytes)
-            BitConverterLE.GetBytes((ushort)this.DialectRevision).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((ushort)this.DialectRevision).CopyTo(buffer, 4);
 
             // Reserved (2 bytes)
             // ServerGuid (16 bytes)
             this.ServerGuid.ToByteArray().CopyTo(buffer, 8);
 
             // Capabilities (4 bytes)
-            BitConverterLE.GetBytes((uint)this.Capabilities).CopyTo(buffer, 24);
+            BitConverterLittleEndian.GetBytes((uint)this.Capabilities).CopyTo(buffer, 24);
 
             // MaxTransactSize (4 bytes)
-            BitConverterLE.GetBytes((uint)this.MaxTransactSize).CopyTo(buffer, 28);
+            BitConverterLittleEndian.GetBytes((uint)this.MaxTransactSize).CopyTo(buffer, 28);
 
             // MaxReadSize (4 bytes)
-            BitConverterLE.GetBytes((uint)this.MaxReadSize).CopyTo(buffer, 32);
+            BitConverterLittleEndian.GetBytes((uint)this.MaxReadSize).CopyTo(buffer, 32);
 
             // MaxWriteSize (4 bytes)
-            BitConverterLE.GetBytes((uint)this.MaxWriteSize).CopyTo(buffer, 36);
+            BitConverterLittleEndian.GetBytes((uint)this.MaxWriteSize).CopyTo(buffer, 36);
 
             // SystemTime (8 bytes)
-            BitConverterLE.GetBytes((ulong)DateTime.Now.ToFileTime()).CopyTo(buffer, 40);
+            BitConverterLittleEndian.GetBytes((ulong)DateTime.Now.ToFileTime()).CopyTo(buffer, 40);
 
             // ServerStartTime (8 bytes)
-            BitConverterLE.GetBytes((ulong)SmbServer.StartTime.ToFileTime()).CopyTo(buffer, 48);
+            BitConverterLittleEndian.GetBytes((ulong)SmbServer.StartTime.ToFileTime()).CopyTo(buffer, 48);
 
             // SecurityBufferOffset (2 bytes)
-            BitConverterLE.GetBytes((ushort)(64 + Packet.HeaderLength)).CopyTo(buffer, 56);
+            BitConverterLittleEndian.GetBytes((ushort)(64 + Packet.HeaderLength)).CopyTo(buffer, 56);
 
             // SecurityBufferLength (2 bytes)
-            BitConverterLE.GetBytes((ushort)this.SecurityBuffer.Length).CopyTo(buffer, 58);
+            BitConverterLittleEndian.GetBytes((ushort)this.SecurityBuffer.Length).CopyTo(buffer, 58);
 
             // Reserved2 (4 bytes)
             // Buffer (variable)

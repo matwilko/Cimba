@@ -15,7 +15,7 @@
 
         internal static LeaseBreakNotification Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 44)
+            if (BitConverterLittleEndian.ToUShort(stream) != 44)
             {
                 throw new SmbPacketException("Invalid LeaseBreakNotification");
             }
@@ -26,17 +26,17 @@
             stream.Seek(2, SeekOrigin.Current);
 
             // Flags (4 bytes)
-            packet.AcknowledgementRequired = BitConverterLE.ToUInt(stream) == 0x00000001;
+            packet.AcknowledgementRequired = BitConverterLittleEndian.ToUInt(stream) == 0x00000001;
 
             // LeaseKey (16 bytes)
             packet.LeaseKey = new byte[16];
             stream.Read(packet.LeaseKey, 0, 16);
 
             // CurrentLeaseState (4 bytes)
-            packet.CurrentLeaseState = (LeaseState)BitConverterLE.ToUInt(stream);
+            packet.CurrentLeaseState = (LeaseState)BitConverterLittleEndian.ToUInt(stream);
 
             // NewLeaseState (4 bytes)
-            packet.NewLeaseState = (LeaseState)BitConverterLE.ToUInt(stream);
+            packet.NewLeaseState = (LeaseState)BitConverterLittleEndian.ToUInt(stream);
 
             // BreakReason (4 bytes) - MUST NOT be used and MUST be reserved
             // AccessMaskHint (4 bytes) - MUST NOT be used and MUST be reserved

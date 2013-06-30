@@ -54,7 +54,7 @@
             TreeConnectResponse packet = new TreeConnectResponse();
 
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(data, 0) != 16)
+            if (BitConverterLittleEndian.ToUShort(data, 0) != 16)
             {
                 throw new SmbPacketException("Malformed Tree_Connect Response");
             }
@@ -65,13 +65,13 @@
             // Reserved (1 byte)
 
             // ShareFlags (4 bytes)
-            packet.Flags = (ShareFlags)BitConverterLE.ToUInt(data, 4);
+            packet.Flags = (ShareFlags)BitConverterLittleEndian.ToUInt(data, 4);
 
             // Capabilities (4 bytes)
-            packet.Capabilities = (ShareCapabilities)BitConverterLE.ToUInt(data, 8);
+            packet.Capabilities = (ShareCapabilities)BitConverterLittleEndian.ToUInt(data, 8);
 
             // MaximalAccess (4 bytes)
-            packet.MaximalAccess = (AccessMask.File_Pipe_Printer)BitConverterLE.ToUInt(data, 12);
+            packet.MaximalAccess = (AccessMask.File_Pipe_Printer)BitConverterLittleEndian.ToUInt(data, 12);
 
             return packet;
         }
@@ -81,7 +81,7 @@
             byte[] buffer = new byte[16];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)16).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)16).CopyTo(buffer, 0);
 
             // ShareType (1 byte)
             buffer[2] = (byte)this.Type;
@@ -90,13 +90,13 @@
             buffer[3] = 0;
 
             // ShareFlags (4 bytes)
-            BitConverterLE.GetBytes((uint)this.Flags).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((uint)this.Flags).CopyTo(buffer, 4);
 
             // Capabilities (4 bytes)
-            BitConverterLE.GetBytes((uint)this.Capabilities).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes((uint)this.Capabilities).CopyTo(buffer, 8);
 
             // MaximalAccess (4 bytes)
-            BitConverterLE.GetBytes((uint)this.MaximalAccess).CopyTo(buffer, 12);
+            BitConverterLittleEndian.GetBytes((uint)this.MaximalAccess).CopyTo(buffer, 12);
 
             return buffer;
         }

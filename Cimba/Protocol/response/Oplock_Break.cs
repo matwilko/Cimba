@@ -17,7 +17,7 @@
 
         internal static OplockBreakNotification Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 24)
+            if (BitConverterLittleEndian.ToUShort(stream) != 24)
             {
                 throw new SmbPacketException("Invalid OplockBreakNotification");
             }
@@ -32,7 +32,7 @@
             stream.Seek(4, SeekOrigin.Current);
 
             // FileId (16 bytes)
-            packet.FileId = new FILE_ID(BitConverterLE.ToULong(stream), BitConverterLE.ToULong(stream));
+            packet.FileId = new FILE_ID(BitConverterLittleEndian.ToULong(stream), BitConverterLittleEndian.ToULong(stream));
 
             return packet;
         }

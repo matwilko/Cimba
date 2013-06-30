@@ -36,24 +36,24 @@
             byte[] buffer = new byte[32 + this.Buffer.Length];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)33).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)33).CopyTo(buffer, 0);
 
             // InfoType (1 byte)
-            BitConverterLE.GetBytes((byte)this.InfoType).CopyTo(buffer, 2);
+            BitConverterLittleEndian.GetBytes((byte)this.InfoType).CopyTo(buffer, 2);
 
             // FileInfoClass (1 byte)
-            BitConverterLE.GetBytes(this.FileInfoClass).CopyTo(buffer, 3);
+            BitConverterLittleEndian.GetBytes(this.FileInfoClass).CopyTo(buffer, 3);
 
             // BufferLength (4 bytes)
-            BitConverterLE.GetBytes((uint)this.Buffer.Length).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((uint)this.Buffer.Length).CopyTo(buffer, 4);
 
             // BufferOffset (2 bytes)
-            BitConverterLE.GetBytes((ushort)(32 + Packet.HeaderLength)).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes((ushort)(32 + Packet.HeaderLength)).CopyTo(buffer, 8);
 
             // Reserved (2 bytes) - MUST NOT be used and MUST be reserved
 
             // AdditionalInformation (4 bytes)
-            BitConverterLE.GetBytes((uint)this.AdditionalInformation).CopyTo(buffer, 12);
+            BitConverterLittleEndian.GetBytes((uint)this.AdditionalInformation).CopyTo(buffer, 12);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(buffer, 16);

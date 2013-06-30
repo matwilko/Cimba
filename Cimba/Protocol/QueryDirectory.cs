@@ -40,17 +40,17 @@
         internal static FileBothDirectoryInformation Read(byte[] buffer, int offset = 0)
         {
             FileBothDirectoryInformation info = new FileBothDirectoryInformation();
-            info.NextEntryOffset = BitConverterLE.ToUInt(buffer, offset);
-            info.FileIndex = BitConverterLE.ToUInt(buffer, offset + 4);
-            info.CreationTime = BitConverterLE.ToULong(buffer, offset + 8);
-            info.LastAccessTime = BitConverterLE.ToULong(buffer, offset + 16);
-            info.LastWriteTime = BitConverterLE.ToULong(buffer, offset + 24);
-            info.ChangeTime = BitConverterLE.ToULong(buffer, offset + 32);
-            info.EndOfFile = BitConverterLE.ToULong(buffer, offset + 40);
-            info.AllocationSize = BitConverterLE.ToULong(buffer, offset + 48);
-            info.Attributes = BitConverterLE.ToUInt(buffer, offset + 56);
-            uint fileNameLength = BitConverterLE.ToUInt(buffer, offset + 60);
-            info.EaSize = BitConverterLE.ToUInt(buffer, offset + 64);
+            info.NextEntryOffset = BitConverterLittleEndian.ToUInt(buffer, offset);
+            info.FileIndex = BitConverterLittleEndian.ToUInt(buffer, offset + 4);
+            info.CreationTime = BitConverterLittleEndian.ToULong(buffer, offset + 8);
+            info.LastAccessTime = BitConverterLittleEndian.ToULong(buffer, offset + 16);
+            info.LastWriteTime = BitConverterLittleEndian.ToULong(buffer, offset + 24);
+            info.ChangeTime = BitConverterLittleEndian.ToULong(buffer, offset + 32);
+            info.EndOfFile = BitConverterLittleEndian.ToULong(buffer, offset + 40);
+            info.AllocationSize = BitConverterLittleEndian.ToULong(buffer, offset + 48);
+            info.Attributes = BitConverterLittleEndian.ToUInt(buffer, offset + 56);
+            uint fileNameLength = BitConverterLittleEndian.ToUInt(buffer, offset + 60);
+            info.EaSize = BitConverterLittleEndian.ToUInt(buffer, offset + 64);
             byte shortNameLength = buffer[offset + 68];
 
             byte[] shortnameBuffer = new byte[shortNameLength];

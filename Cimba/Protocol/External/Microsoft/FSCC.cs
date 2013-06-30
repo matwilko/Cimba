@@ -28,11 +28,11 @@
             Dictionary<string, byte[]> extendedAttributes = new Dictionary<string, byte[]>();
 
             uint bufferpos = 0;
-            uint nextEntryOffset = BitConverterLE.ToUInt(stream, 0);
+            uint nextEntryOffset = BitConverterLittleEndian.ToUInt(stream, 0);
             while (nextEntryOffset != 0)
             {
                 byte exattrNameLength = stream[bufferpos + 5];
-                ushort exattrValueLength = BitConverterLE.ToUShort(stream, (int)(bufferpos + 6));
+                ushort exattrValueLength = BitConverterLittleEndian.ToUShort(stream, (int)(bufferpos + 6));
                 byte[] exattrNameBytes = new byte[exattrNameLength];
                 byte[] exattrValueBytes = new byte[exattrValueLength];
                 Array.Copy(stream, bufferpos + 64, exattrNameBytes, 0, exattrNameLength);
@@ -58,9 +58,9 @@
             {
                 int total = 64 + Encoding.ASCII.GetByteCount(entry.Key) + entry.Value.Length;
                 total = total + (8 - (total % 8));
-                BitConverterLE.GetBytes((uint)total).CopyTo(buffer, bufferpos);
-                BitConverterLE.GetBytes((byte)Encoding.ASCII.GetByteCount(entry.Key)).CopyTo(buffer, bufferpos + 40);
-                BitConverterLE.GetBytes((ushort)entry.Value.Length).CopyTo(buffer, bufferpos + 48);
+                BitConverterLittleEndian.GetBytes((uint)total).CopyTo(buffer, bufferpos);
+                BitConverterLittleEndian.GetBytes((byte)Encoding.ASCII.GetByteCount(entry.Key)).CopyTo(buffer, bufferpos + 40);
+                BitConverterLittleEndian.GetBytes((ushort)entry.Value.Length).CopyTo(buffer, bufferpos + 48);
                 Encoding.ASCII.GetBytes(entry.Key).CopyTo(buffer, bufferpos + 64);
                 entry.Value.CopyTo(buffer, bufferpos + 64 + Encoding.ASCII.GetByteCount(entry.Key));
             }

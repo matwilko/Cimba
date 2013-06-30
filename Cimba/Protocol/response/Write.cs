@@ -15,7 +15,7 @@
 
         internal static WriteResponse Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 17)
+            if (BitConverterLittleEndian.ToUShort(stream) != 17)
             {
                 throw new SmbPacketException("Invalid WriteResponse");
             }
@@ -26,7 +26,7 @@
             stream.Seek(2, SeekOrigin.Current);
 
             // Count (4 bytes)
-            packet.Count = BitConverterLE.ToUInt(stream);
+            packet.Count = BitConverterLittleEndian.ToUInt(stream);
 
             // Remaining (4 bytes)
             // WriteChannelInfoOffset (2 bytes)

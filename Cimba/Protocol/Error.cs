@@ -28,14 +28,14 @@
             stream.Read(buffer, 0, 8);
 
             // StructureSize (2 bytes) - MUST be 9
-            if (BitConverterLE.ToUShort(buffer, 0) != 9)
+            if (BitConverterLittleEndian.ToUShort(buffer, 0) != 9)
             {
                 throw new SmbPacketException("Malformed Error Response");
             }
 
             // Reserved (2 bytes)
             // ByteCount (4 bytes)
-            uint bytecount = BitConverterLE.ToUInt(buffer, 4);
+            uint bytecount = BitConverterLittleEndian.ToUInt(buffer, 4);
 
             ErrorResponse packet = new ErrorResponse();
 
@@ -51,11 +51,11 @@
             byte[] buffer = new byte[8 + this.ErrorData.Length];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)9).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)9).CopyTo(buffer, 0);
 
             // Reserved (2 bytes)
             // ByteCount (4 bytes)
-            BitConverterLE.GetBytes((uint)this.ErrorData.Length).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes((uint)this.ErrorData.Length).CopyTo(buffer, 4);
 
             // ErrorData (variable)
             this.ErrorData.CopyTo(buffer, 8);

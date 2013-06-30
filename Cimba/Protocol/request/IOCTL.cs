@@ -24,7 +24,7 @@
         internal static IOCTLRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 57)
+            if (BitConverterLittleEndian.ToUShort(stream) != 57)
             {
                 throw new SmbPacketException("Invalid IOCTLRequest");
             }
@@ -35,7 +35,7 @@
             stream.Seek(2, SeekOrigin.Current);
 
             // CtlCode (4 bytes)
-            packet.CtlCode = BitConverterLE.ToUInt(stream);
+            packet.CtlCode = BitConverterLittleEndian.ToUInt(stream);
 
             // FileId (16 bytes)
             byte[] fileid = new byte[16];
@@ -43,13 +43,13 @@
             packet.FileId = new FILE_ID(fileid);
 
             // InputOffset (4 bytes)
-            uint inputOffset = BitConverterLE.ToUInt(stream);
+            uint inputOffset = BitConverterLittleEndian.ToUInt(stream);
 
             // InputCount (4 bytes)
-            uint inputLength = BitConverterLE.ToUInt(stream);
+            uint inputLength = BitConverterLittleEndian.ToUInt(stream);
 
             // MaxInputResponse (4 bytes)
-            packet.MaxInputResponse = BitConverterLE.ToUInt(stream);
+            packet.MaxInputResponse = BitConverterLittleEndian.ToUInt(stream);
 
             // OutputOffset (4 bytes)
             stream.Seek(4, SeekOrigin.Current);
@@ -58,10 +58,10 @@
             stream.Seek(4, SeekOrigin.Current);
 
             // MaxOutputResponse (4 bytes)
-            packet.MaxOutputResponse = BitConverterLE.ToUInt(stream);
+            packet.MaxOutputResponse = BitConverterLittleEndian.ToUInt(stream);
 
             // Flags (4 bytes)
-            packet.IsFSCTL = BitConverterLE.ToUInt(stream) == 1;
+            packet.IsFSCTL = BitConverterLittleEndian.ToUInt(stream) == 1;
 
             // Reserved2 (4 bytes)
 

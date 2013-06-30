@@ -15,7 +15,7 @@
             stream.Read(buffer, 0, 4);
 
             // StructureSize (2 bytes) - MUST be 4
-            if (BitConverterLE.ToShort(buffer, 0) != 4)
+            if (BitConverterLittleEndian.ToShort(buffer, 0) != 4)
             {
                 throw new SmbPacketException("Malformed Logoff Request");
             }
@@ -29,7 +29,7 @@
             byte[] packet = new byte[4];
 
             // StrucutreSize (2 bytes) - MUST be 4
-            BitConverterLE.GetBytes((ushort)4).CopyTo(packet, 0);
+            BitConverterLittleEndian.GetBytes((ushort)4).CopyTo(packet, 0);
 
             // Reserved (2 bytes) - MUST set to 0
             return packet;

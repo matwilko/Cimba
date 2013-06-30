@@ -228,66 +228,66 @@
             output[3] = BitConverter.GetBytes('B')[0];
 
             // StructureSize (2 bytes) - MUST be set to 64, the size, in bytes of the SMB2 packet structure
-            BitConverterLE.GetBytes((ushort)64).CopyTo(output, 4);
+            BitConverterLittleEndian.GetBytes((ushort)64).CopyTo(output, 4);
 
             // CreditCharge (2 bytes) - If version is SMB 2.002, field MUST NOT be used, MUST be reserved and set to 0. For SMB 2.1, the the number of credits this request consumes.
             if (packet.Version == SmbVersion.V20)
             {
-                BitConverterLE.GetBytes((ushort)0).CopyTo(output, 6);
+                BitConverterLittleEndian.GetBytes((ushort)0).CopyTo(output, 6);
             }
             else
             {
-                BitConverterLE.GetBytes((ushort)packet.CreditCharge).CopyTo(output, 6);
+                BitConverterLittleEndian.GetBytes((ushort)packet.CreditCharge).CopyTo(output, 6);
             }
 
             // Status (4 bytes) - Status code for a response. For a request, client MUST set this field to 0 and server MUST ignore it. For response, this field can be set to any valid status code
             if (packet.IsRequest)
             {
-                BitConverterLE.GetBytes((uint)0).CopyTo(output, 8);
+                BitConverterLittleEndian.GetBytes((uint)0).CopyTo(output, 8);
             }
             else
             {
-                BitConverterLE.GetBytes((uint)packet.Status).CopyTo(output, 8);
+                BitConverterLittleEndian.GetBytes((uint)packet.Status).CopyTo(output, 8);
             }
 
             // Command (2 bytes) - the command code of this packet.
-            BitConverterLE.GetBytes((ushort)packet.Command).CopyTo(output, 12);
+            BitConverterLittleEndian.GetBytes((ushort)packet.Command).CopyTo(output, 12);
 
             // CreditRequest/CreditResponse (2 bytes) - On a request, indicates number of credits requested; on a response, indicates the number of credits granted.
-            BitConverterLE.GetBytes((ushort)packet.CreditRR).CopyTo(output, 14);
+            BitConverterLittleEndian.GetBytes((ushort)packet.CreditRR).CopyTo(output, 14);
 
             // Flags (4 bytes)
-            BitConverterLE.GetBytes((uint)packet.flags).CopyTo(output, 16);
+            BitConverterLittleEndian.GetBytes((uint)packet.flags).CopyTo(output, 16);
 
             // NextCommand (4 bytes) - For a compounded request, field must be set to the offset in bytes from the beginning of this SMB2 packet to the start of the subsequent 8-byte aligned SMB2 packet
             if (packet.IsCompoundRequest)
             {
-                BitConverterLE.GetBytes((uint)output.Length).CopyTo(output, 20);
+                BitConverterLittleEndian.GetBytes((uint)output.Length).CopyTo(output, 20);
             }
             else
             {
-                BitConverterLE.GetBytes((uint)0).CopyTo(output, 20);
+                BitConverterLittleEndian.GetBytes((uint)0).CopyTo(output, 20);
             }
 
             // MessageId (8 bytes) - Value that identifies a message request and response uniquely across all messages
-            BitConverterLE.GetBytes((ulong)packet.MessageId).CopyTo(output, 24);
+            BitConverterLittleEndian.GetBytes((ulong)packet.MessageId).CopyTo(output, 24);
 
             // SYNC/ASYNC deviation
             if (packet.ASync)
             {
-                BitConverterLE.GetBytes((ulong)packet.AsyncId).CopyTo(output, 32);
+                BitConverterLittleEndian.GetBytes((ulong)packet.AsyncId).CopyTo(output, 32);
             }
             else
             {
                 // ProcessId (4 bytes) - The client-side identification of the process that issued the request. Client MUST set this field to 0xFEFF; Server must send the same ProcessId received. Client MUST ignore this field.
-                BitConverterLE.GetBytes((uint)packet.ProcessId).CopyTo(output, 32);
+                BitConverterLittleEndian.GetBytes((uint)packet.ProcessId).CopyTo(output, 32);
 
                 // TreeId (4 bytes) - Uniquely identifies the TreeConnect for the command. Must be 0 for SMB2 TREE_CONNECT request.
-                BitConverterLE.GetBytes((uint)packet.TreeId).CopyTo(output, 36);
+                BitConverterLittleEndian.GetBytes((uint)packet.TreeId).CopyTo(output, 36);
             }
 
             // SessionId (8 bytes) - Uniquely identifies the established session for the command. MUST be 0 for requests that do not have a user context associated with them
-            BitConverterLE.GetBytes((ulong)packet.SessionId).CopyTo(output, 40);
+            BitConverterLittleEndian.GetBytes((ulong)packet.SessionId).CopyTo(output, 40);
 
             // Signature (16 bytes) - While it may not necessarily be required to sign the packet (that is if neither client or server requires signing) but the client always MAY sign the packet, so in this implementation, always will
             packet.signature.CopyTo(output, 48);
@@ -297,7 +297,7 @@
             byte[] netbios_encapsulation = new byte[output.Length + 4];
             netbios_encapsulation[0] = 0x00;
             netbios_encapsulation[1] = 0x00;
-            BitConverterBE.GetBytes((ushort)output.Length).CopyTo(netbios_encapsulation, 2);
+            BitConverterBigEndian.GetBytes((ushort)output.Length).CopyTo(netbios_encapsulation, 2);
             output.CopyTo(netbios_encapsulation, 4);
 
             // Packet must be padded to an 8 byte boundary
@@ -328,51 +328,51 @@
 
             ulong sessionId;
 
-            if (BitConverterLE.ToUInt(header, 0) != BitConverter.ToUInt32(new byte[] { 0xFE, (byte)'S', (byte)'M', (byte)'B' }, 0))
+            if (BitConverterLittleEndian.ToUInt(header, 0) != BitConverter.ToUInt32(new byte[] { 0xFE, (byte)'S', (byte)'M', (byte)'B' }, 0))
             {
                 throw new SmbPacketException("Incorrect ProtocolId, received: " + BitConverter.ToString(header, 0, 4));
             }
 
-            if (BitConverterLE.ToUShort(header, 4) != 64)
+            if (BitConverterLittleEndian.ToUShort(header, 4) != 64)
             {
-                throw new SmbPacketException("Incorrect StructureSize, received: " + BitConverterLE.ToUShort(header, 4));
+                throw new SmbPacketException("Incorrect StructureSize, received: " + BitConverterLittleEndian.ToUShort(header, 4));
             }
 
             if (version == SmbVersion.V21)
             {
-                creditCharge = BitConverterLE.ToUShort(header, 6);
+                creditCharge = BitConverterLittleEndian.ToUShort(header, 6);
             }
 
-            status = BitConverterLE.ToUInt(header, 8);
+            status = BitConverterLittleEndian.ToUInt(header, 8);
 
-            uint com = BitConverterLE.ToUShort(header, 12);
+            uint com = BitConverterLittleEndian.ToUShort(header, 12);
             command = (PacketType)com;
 
             if (version == SmbVersion.V21)
             {
-                creditResponse = BitConverterLE.ToUShort(header, 14);
+                creditResponse = BitConverterLittleEndian.ToUShort(header, 14);
             }
             else
             {
                 creditResponse = 1;
             }
 
-            flags = (PacketFlags)BitConverterLE.ToUInt(header, 16);
+            flags = (PacketFlags)BitConverterLittleEndian.ToUInt(header, 16);
 
-            nextCommand = BitConverterLE.ToUInt(header, 20);
-            messageId = BitConverterLE.ToULong(header, 24);
+            nextCommand = BitConverterLittleEndian.ToUInt(header, 20);
+            messageId = BitConverterLittleEndian.ToULong(header, 24);
 
             if (flags.HasFlag(PacketFlags.ASYNC_COMMAND))
             {
-                asyncId = BitConverterLE.ToULong(header, 32);
+                asyncId = BitConverterLittleEndian.ToULong(header, 32);
             }
             else
             {
-                processId = BitConverterLE.ToUInt(header, 32);
-                treeId = BitConverterLE.ToUInt(header, 36);
+                processId = BitConverterLittleEndian.ToUInt(header, 32);
+                treeId = BitConverterLittleEndian.ToUInt(header, 36);
             }
 
-            sessionId = BitConverterLE.ToULong(header, 40);
+            sessionId = BitConverterLittleEndian.ToULong(header, 40);
 
             Packet packet;
             if (status == NTSTATUS.STATUS_SUCCESS | (status == NTSTATUS.STATUS_MORE_PROCESSING_REQUIRED && command == PacketType.Session_Setup))

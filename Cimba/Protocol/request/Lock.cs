@@ -33,15 +33,15 @@
             byte[] buffer = new byte[48 + (24 * (this.Locks.Count - 1))];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)48).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)48).CopyTo(buffer, 0);
 
             // LockCount (2 bytes)
-            BitConverterLE.GetBytes((ushort)this.Locks.Count).CopyTo(buffer, 2);
+            BitConverterLittleEndian.GetBytes((ushort)this.Locks.Count).CopyTo(buffer, 2);
 
             // LockSequence (4 bytes)
             if (this.VersionInUse == SmbVersion.V21)
             {
-                BitConverterLE.GetBytes((uint)this.LockSequence).CopyTo(buffer, 4);
+                BitConverterLittleEndian.GetBytes((uint)this.LockSequence).CopyTo(buffer, 4);
             }
 
             // FileId (16 bytes)

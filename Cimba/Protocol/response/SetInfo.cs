@@ -12,7 +12,7 @@
 
         internal static SetInfoResponse Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 2)
+            if (BitConverterLittleEndian.ToUShort(stream) != 2)
             {
                 throw new SmbPacketException("Invalid SetInfoResponse");
             }
@@ -25,7 +25,7 @@
         protected override byte[] Generate()
         {
             byte[] buffer = new byte[2];
-            BitConverterLE.GetBytes((ushort)2).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)2).CopyTo(buffer, 0);
             return buffer;
         }
     }

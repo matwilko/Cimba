@@ -233,7 +233,7 @@
                 }
 
                 netbios_header = Packet.ForceRead(this.stream, netbios_header, 4);
-                datalength = BitConverterBE.ToUShort(netbios_header, 2);
+                datalength = BitConverterBigEndian.ToUShort(netbios_header, 2);
                 data = new byte[datalength];
                 data = Packet.ForceRead(this.stream, data, datalength);
 

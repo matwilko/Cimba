@@ -15,7 +15,7 @@
 
         internal static QueryInfoResponse Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 9)
+            if (BitConverterLittleEndian.ToUShort(stream) != 9)
             {
                 throw new SmbPacketException("Invalid QueryInfoResponse");
             }
@@ -23,10 +23,10 @@
             QueryInfoResponse packet = new QueryInfoResponse();
 
             // OutputBufferOffset (2 bytes)
-            ushort outputBufferOffset = BitConverterLE.ToUShort(stream);
+            ushort outputBufferOffset = BitConverterLittleEndian.ToUShort(stream);
 
             // OutputBufferLength (4 bytes)
-            uint outputBufferLength = BitConverterLE.ToUInt(stream);
+            uint outputBufferLength = BitConverterLittleEndian.ToUInt(stream);
 
             packet.OutputBuffer = new byte[outputBufferLength];
             stream.Seek(outputBufferOffset - Packet.HeaderLength, SeekOrigin.Begin);

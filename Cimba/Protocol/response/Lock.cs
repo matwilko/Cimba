@@ -13,7 +13,7 @@
         internal static LockResponse Read(MemoryStream stream)
         {
             // StructureSize (2 bytes) - MUST be 4
-            if (BitConverterLE.ToShort(stream) != 4)
+            if (BitConverterLittleEndian.ToShort(stream) != 4)
             {
                 throw new SmbPacketException("Invalid LockResponse");
             }
@@ -27,7 +27,7 @@
             byte[] packet = new byte[4];
 
             // StructureSize (2 bytes) - MUST be 4
-            BitConverterLE.GetBytes((ushort)4).CopyTo(packet, 0);
+            BitConverterLittleEndian.GetBytes((ushort)4).CopyTo(packet, 0);
 
             // Reserved (2 bytes) - MUST set to 0
             return packet;

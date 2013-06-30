@@ -36,7 +36,7 @@
         internal static ReadRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 49)
+            if (BitConverterLittleEndian.ToUShort(stream) != 49)
             {
                 throw new SmbPacketException("Invalid ReadRequest");
             }
@@ -50,10 +50,10 @@
             stream.Seek(1, SeekOrigin.Current);
 
             // Length (4 bytes)
-            packet.Length = BitConverterLE.ToUInt(stream);
+            packet.Length = BitConverterLittleEndian.ToUInt(stream);
 
             // Offset (8 bytes)
-            packet.Offset = BitConverterLE.ToULong(stream);
+            packet.Offset = BitConverterLittleEndian.ToULong(stream);
 
             // FileId (16 bytes)
             byte[] fileid = new byte[16];
@@ -61,13 +61,13 @@
             packet.FileId = new FILE_ID(fileid);
 
             // MinimumCount (4 bytes)
-            packet.MinimumCount = BitConverterLE.ToUInt(stream);
+            packet.MinimumCount = BitConverterLittleEndian.ToUInt(stream);
 
             // Channel (4 bytes) - MUST NOT be used and MUST be reserved
             stream.Seek(4, SeekOrigin.Current);
 
             // RemainingBytes (4 bytes)
-            packet.RemainingBytes = BitConverterLE.ToUInt(stream);
+            packet.RemainingBytes = BitConverterLittleEndian.ToUInt(stream);
 
             // ReadChannelInfoOffset (2 bytes) - MUST NOT be used and MUST be reserved
             // ReadChannelInfoLength (2 bytes) - MUST NOT be used and MUST be reserved
@@ -80,7 +80,7 @@
             byte[] buffer = new byte[49];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)49).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)49).CopyTo(buffer, 0);
 
             // Padding (1 byte)
             buffer[2] = this.Padding;
@@ -88,20 +88,20 @@
             // Reserved (1 byte)
 
             // Length (4 bytes)
-            BitConverterLE.GetBytes(this.Length).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes(this.Length).CopyTo(buffer, 4);
 
             // Offset (8 bytes)
-            BitConverterLE.GetBytes((ulong)this.Offset).CopyTo(buffer, 8);
+            BitConverterLittleEndian.GetBytes((ulong)this.Offset).CopyTo(buffer, 8);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(buffer, 16);
 
             // MinimumCount (4 bytes)
-            BitConverterLE.GetBytes(this.MinimumCount).CopyTo(buffer, 32);
+            BitConverterLittleEndian.GetBytes(this.MinimumCount).CopyTo(buffer, 32);
 
             // Channel (4 bytes) - MUST NOT be used and MUST be reserved
             // RemainingBytes (4 bytes)
-            BitConverterLE.GetBytes(this.RemainingBytes).CopyTo(buffer, 40);
+            BitConverterLittleEndian.GetBytes(this.RemainingBytes).CopyTo(buffer, 40);
 
             // ReadChannelInfoOffset (2 bytes) - MUST NOT be used and MUST be reserved
             // ReadChannelInfoLength (2 bytes) - MUST NOT be used and MUST be reserved

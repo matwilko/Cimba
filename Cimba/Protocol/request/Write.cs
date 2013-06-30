@@ -34,7 +34,7 @@
         internal static WriteRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 49)
+            if (BitConverterLittleEndian.ToUShort(stream) != 49)
             {
                 throw new SmbPacketException("Invalid WriteRequest");
             }
@@ -42,22 +42,22 @@
             WriteRequest packet = new WriteRequest();
 
             // DataOffset (2 bytes)
-            int dataOffset = BitConverterLE.ToUShort(stream);
+            int dataOffset = BitConverterLittleEndian.ToUShort(stream);
 
             // Length (4 bytes)
-            uint dataLength = BitConverterLE.ToUInt(stream);
+            uint dataLength = BitConverterLittleEndian.ToUInt(stream);
 
             // Offset (8 bytes)
-            packet.Offset = BitConverterLE.ToULong(stream);
+            packet.Offset = BitConverterLittleEndian.ToULong(stream);
 
             // FileId (16 bytes)
-            packet.FileId = new FILE_ID(BitConverterLE.ToULong(stream), BitConverterLE.ToULong(stream));
+            packet.FileId = new FILE_ID(BitConverterLittleEndian.ToULong(stream), BitConverterLittleEndian.ToULong(stream));
 
             // Channel (4 bytes) - MUST NOT be used and MUST be reserved, server MUST ignore
             stream.Seek(4, SeekOrigin.Current);
 
             // RemainingBytes (4 bytes)
-            packet.RemainingBytes = BitConverterLE.ToUInt(stream);
+            packet.RemainingBytes = BitConverterLittleEndian.ToUInt(stream);
 
             // WriteChannelInfoOffset (2 bytes) - MUST NOT be used and MUST be reserved - server MUST ignore
             stream.Seek(4, SeekOrigin.Current);
@@ -66,7 +66,7 @@
             stream.Seek(4, SeekOrigin.Current);
 
             // Flags (4 bytes)
-            packet.WriteThrough = (BitConverterLE.ToUInt(stream) & 0x00000001) == 0x00000001;
+            packet.WriteThrough = (BitConverterLittleEndian.ToUInt(stream) & 0x00000001) == 0x00000001;
 
             // Buffer (variable)
             stream.Seek(dataOffset, SeekOrigin.Begin);
@@ -90,34 +90,34 @@
             byte[] packet = new byte[48];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)49).CopyTo(packet, 0);
+            BitConverterLittleEndian.GetBytes((ushort)49).CopyTo(packet, 0);
 
             // DataOffset (2 bytes)
-            BitConverterLE.GetBytes((ushort)(48 + Packet.HeaderLength)).CopyTo(packet, 2);
+            BitConverterLittleEndian.GetBytes((ushort)(48 + Packet.HeaderLength)).CopyTo(packet, 2);
 
             // Length (4 bytes)
-            BitConverterLE.GetBytes((uint)this.Data.Length).CopyTo(packet, 4);
+            BitConverterLittleEndian.GetBytes((uint)this.Data.Length).CopyTo(packet, 4);
 
             // Offset (8 bytes)
-            BitConverterLE.GetBytes(this.Offset).CopyTo(packet, 8);
+            BitConverterLittleEndian.GetBytes(this.Offset).CopyTo(packet, 8);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(packet, 16);
 
             // Channel (4 bytes) - MUST NOT be used and MUST be reserved
             // RemainingBytes (4 bytes)
-            BitConverterLE.GetBytes(this.RemainingBytes).CopyTo(packet, 36);
+            BitConverterLittleEndian.GetBytes(this.RemainingBytes).CopyTo(packet, 36);
 
             // WriteChannelInfoOffset (2 bytes) - MUST NOT be used and MUST be reserved
             // WriteChannelInfoLength (2 bytes) - MUST NOT be used and MUST be reserved
             // Flags (4 bytes)
             if (this.WriteThrough)
             {
-                BitConverterLE.GetBytes((uint)0x00000001).CopyTo(packet, 44);
+                BitConverterLittleEndian.GetBytes((uint)0x00000001).CopyTo(packet, 44);
             }
             else
             {
-                BitConverterLE.GetBytes((uint)0).CopyTo(packet, 44);
+                BitConverterLittleEndian.GetBytes((uint)0).CopyTo(packet, 44);
             }
 
             // Buffer (variable)

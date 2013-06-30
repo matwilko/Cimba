@@ -35,7 +35,7 @@
         internal static QueryDirectoryRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 33)
+            if (BitConverterLittleEndian.ToUShort(stream) != 33)
             {
                 throw new SmbPacketException("Invalid QueryDirectoryRequest");
             }
@@ -49,7 +49,7 @@
             packet.Flags = (QueryDirectory_Flags)(byte)stream.ReadByte();
 
             // FileIndex (4 bytes)
-            packet.FileIndex = BitConverterLE.ToUInt(stream);
+            packet.FileIndex = BitConverterLittleEndian.ToUInt(stream);
 
             // FileId (16 bytes)
             byte[] fileid = new byte[16];
@@ -57,13 +57,13 @@
             packet.FileId = new FILE_ID(fileid);
 
             // FileNameOffset (2 bytes)
-            ushort fileNameOffset = BitConverterLE.ToUShort(stream);
+            ushort fileNameOffset = BitConverterLittleEndian.ToUShort(stream);
 
             // FileNameLength (2 bytes)
-            ushort fileNameLength = BitConverterLE.ToUShort(stream);
+            ushort fileNameLength = BitConverterLittleEndian.ToUShort(stream);
 
             // OutputBufferLength (4 bytes)
-            packet.OutputBufferLength = BitConverterLE.ToUInt(stream);
+            packet.OutputBufferLength = BitConverterLittleEndian.ToUInt(stream);
 
             // Buffer (variable)
             byte[] fileNameBytes = new byte[fileNameLength];
@@ -87,7 +87,7 @@
             }
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)33).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)33).CopyTo(buffer, 0);
 
             // FileInformationClass (1 byte)
             buffer[2] = (byte)this.FileInformationClass;
@@ -96,7 +96,7 @@
             buffer[3] = (byte)this.Flags;
 
             // FileIndex (4 bytes)
-            BitConverterLE.GetBytes(this.FileIndex).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes(this.FileIndex).CopyTo(buffer, 4);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(buffer, 8);
@@ -105,12 +105,12 @@
             // FileNameLength (2 bytes)
             if (!string.IsNullOrEmpty(this.FileName))
             {
-                BitConverterLE.GetBytes((ushort)(32 + Packet.HeaderLength)).CopyTo(buffer, 24);
-                BitConverterLE.GetBytes((ushort)Encoding.Unicode.GetByteCount(this.FileName)).CopyTo(buffer, 26);
+                BitConverterLittleEndian.GetBytes((ushort)(32 + Packet.HeaderLength)).CopyTo(buffer, 24);
+                BitConverterLittleEndian.GetBytes((ushort)Encoding.Unicode.GetByteCount(this.FileName)).CopyTo(buffer, 26);
             }
 
             // OutputBufferLength (4 bytes)
-            BitConverterLE.GetBytes(this.OutputBufferLength).CopyTo(buffer, 28);
+            BitConverterLittleEndian.GetBytes(this.OutputBufferLength).CopyTo(buffer, 28);
 
             // Buffer (variable)
             if (!string.IsNullOrEmpty(this.FileName))

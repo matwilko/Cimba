@@ -10,7 +10,7 @@
 
         internal static ChangeNotifyResponse Read(MemoryStream stream)
         {
-            if (BitConverterLE.ToUShort(stream) != 9)
+            if (BitConverterLittleEndian.ToUShort(stream) != 9)
             {
                 throw new SmbPacketException("Invalid ChangeNotifyResponse");
             }
@@ -18,10 +18,10 @@
             ChangeNotifyResponse packet = new ChangeNotifyResponse();
 
             // OutputBufferOffset (2 bytes)
-            ushort outputBufferOffset = BitConverterLE.ToUShort(stream);
+            ushort outputBufferOffset = BitConverterLittleEndian.ToUShort(stream);
 
             // OutputBufferLength (4 bytes)
-            uint outputBufferLength = BitConverterLE.ToUInt(stream);
+            uint outputBufferLength = BitConverterLittleEndian.ToUInt(stream);
 
             // Buffer (variable)
             byte[] buffer = new byte[outputBufferLength];

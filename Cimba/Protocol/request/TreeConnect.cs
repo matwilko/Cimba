@@ -21,7 +21,7 @@
         internal static TreeConnectRequest Read(MemoryStream stream)
         {
             // StructureSize (2 bytes)
-            if (BitConverterLE.ToUShort(stream) != 9)
+            if (BitConverterLittleEndian.ToUShort(stream) != 9)
             {
                 throw new SmbPacketException("Invalid TreeConnectRequest");
             }
@@ -32,10 +32,10 @@
             stream.Seek(2, SeekOrigin.Current);
 
             // PathOffset (2 bytes)
-            int pathOffset = BitConverterLE.ToUShort(stream);
+            int pathOffset = BitConverterLittleEndian.ToUShort(stream);
 
             // PathLength (2 bytes)
-            int pathLength = BitConverterLE.ToUShort(stream);
+            int pathLength = BitConverterLittleEndian.ToUShort(stream);
 
             // Buffer (variable)
             byte[] path = new byte[pathLength];
@@ -51,15 +51,15 @@
             byte[] data = new byte[8 + Encoding.Unicode.GetByteCount(this.ShareName)];
 
             // StructureSize (2 bytes) - MUST be 8 (spec says 9...)
-            BitConverterLE.GetBytes((ushort)9).CopyTo(data, 0);
+            BitConverterLittleEndian.GetBytes((ushort)9).CopyTo(data, 0);
 
             // Reserved (2 bytes) - MUST NOT be used
 
             // PathOffset - Offset, in bytes, of the full share path name from the beginning of the packet header
-            BitConverterLE.GetBytes((ushort)(Packet.HeaderLength + 8)).CopyTo(data, 4);
+            BitConverterLittleEndian.GetBytes((ushort)(Packet.HeaderLength + 8)).CopyTo(data, 4);
 
             // PathLength - Length, in bytes, of the path name
-            BitConverterLE.GetBytes((ushort)Encoding.Unicode.GetByteCount(this.ShareName)).CopyTo(data, 6);
+            BitConverterLittleEndian.GetBytes((ushort)Encoding.Unicode.GetByteCount(this.ShareName)).CopyTo(data, 6);
 
             Encoding.Unicode.GetBytes(this.ShareName).CopyTo(data, 8);
 

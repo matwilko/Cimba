@@ -54,10 +54,10 @@
             ulong version = 0x0601B1D10000000f;
 
             byte[] message = new byte[40];
-            BitConverterLE.GetBytes(ntlmssp).CopyTo(message, 0);
-            BitConverterLE.GetBytes((uint)1).CopyTo(message, 8);
-            BitConverterLE.GetBytes(flags).CopyTo(message, 12);
-            BitConverterLE.GetBytes(version).CopyTo(message, 32);
+            BitConverterLittleEndian.GetBytes(ntlmssp).CopyTo(message, 0);
+            BitConverterLittleEndian.GetBytes((uint)1).CopyTo(message, 8);
+            BitConverterLittleEndian.GetBytes(flags).CopyTo(message, 12);
+            BitConverterLittleEndian.GetBytes(version).CopyTo(message, 32);
 
             return message;
         }
@@ -73,22 +73,22 @@
                                 | NEGOTIATE.EXTENDED_SESSIONSECURITY
                                 | NEGOTIATE.SIGN
                                 | NEGOTIATE.VERSION);
-            return BitConverterLE.ToULong(buffer, 0) == ntlmssp
-                    && BitConverterLE.ToULong(buffer, 8) == 1
-                    && (BitConverterLE.ToUInt(buffer, 12) & flags) == flags;
+            return BitConverterLittleEndian.ToULong(buffer, 0) == ntlmssp
+                    && BitConverterLittleEndian.ToULong(buffer, 8) == 1
+                    && (BitConverterLittleEndian.ToUInt(buffer, 12) & flags) == flags;
         }
 
         internal static Tuple<bool, ulong, byte[]> CHALLENGE_MESSAGE(byte[] buffer)
         {
-            if (BitConverterLE.ToULong(buffer, 0) == ntlmssp
-                && BitConverterLE.ToUInt(buffer, 8) == 2
-                && (BitConverterLE.ToUInt(buffer, 20) & (uint)NEGOTIATE.TARGET_INFO) == (uint)NEGOTIATE.TARGET_INFO)
+            if (BitConverterLittleEndian.ToULong(buffer, 0) == ntlmssp
+                && BitConverterLittleEndian.ToUInt(buffer, 8) == 2
+                && (BitConverterLittleEndian.ToUInt(buffer, 20) & (uint)NEGOTIATE.TARGET_INFO) == (uint)NEGOTIATE.TARGET_INFO)
             {
-                ushort targetInfoLen = BitConverterLE.ToUShort(buffer, 40);
-                uint targetInfoOffset = BitConverterLE.ToUInt(buffer, 44);
+                ushort targetInfoLen = BitConverterLittleEndian.ToUShort(buffer, 40);
+                uint targetInfoOffset = BitConverterLittleEndian.ToUInt(buffer, 44);
                 byte[] targetInfo = new byte[targetInfoLen];
                 Array.Copy(buffer, targetInfoOffset, targetInfo, 0, targetInfoLen);
-                return new Tuple<bool, ulong, byte[]>(true, BitConverterLE.ToULong(buffer, 24), targetInfo);
+                return new Tuple<bool, ulong, byte[]>(true, BitConverterLittleEndian.ToULong(buffer, 24), targetInfo);
             }
             else
             {
@@ -113,17 +113,17 @@
             byte[] targetInfo = NTLM2.TargetInfo(serverName);
 
             byte[] message = new byte[56 + targetName.Length + targetInfo.Length];
-            BitConverterLE.GetBytes(ntlmssp).CopyTo(message, 0);
-            BitConverterLE.GetBytes((uint)2).CopyTo(message, 8);
-            BitConverterLE.GetBytes((ushort)targetName.Length).CopyTo(message, 12);
-            BitConverterLE.GetBytes((ushort)targetName.Length).CopyTo(message, 14);
-            BitConverterLE.GetBytes((uint)56).CopyTo(message, 16);
-            BitConverterLE.GetBytes(flags).CopyTo(message, 20);
-            BitConverterLE.GetBytes(serverChallenge).CopyTo(message, 24);
-            BitConverterLE.GetBytes((ushort)targetInfo.Length).CopyTo(message, 40);
-            BitConverterLE.GetBytes((ushort)targetInfo.Length).CopyTo(message, 42);
-            BitConverterLE.GetBytes((uint)(56 + targetName.Length)).CopyTo(message, 44);
-            BitConverterLE.GetBytes(version).CopyTo(message, 48);
+            BitConverterLittleEndian.GetBytes(ntlmssp).CopyTo(message, 0);
+            BitConverterLittleEndian.GetBytes((uint)2).CopyTo(message, 8);
+            BitConverterLittleEndian.GetBytes((ushort)targetName.Length).CopyTo(message, 12);
+            BitConverterLittleEndian.GetBytes((ushort)targetName.Length).CopyTo(message, 14);
+            BitConverterLittleEndian.GetBytes((uint)56).CopyTo(message, 16);
+            BitConverterLittleEndian.GetBytes(flags).CopyTo(message, 20);
+            BitConverterLittleEndian.GetBytes(serverChallenge).CopyTo(message, 24);
+            BitConverterLittleEndian.GetBytes((ushort)targetInfo.Length).CopyTo(message, 40);
+            BitConverterLittleEndian.GetBytes((ushort)targetInfo.Length).CopyTo(message, 42);
+            BitConverterLittleEndian.GetBytes((uint)(56 + targetName.Length)).CopyTo(message, 44);
+            BitConverterLittleEndian.GetBytes(version).CopyTo(message, 48);
             targetName.CopyTo(message, 56);
             targetInfo.CopyTo(message, 56 + targetName.Length);
 
@@ -147,27 +147,27 @@
             byte[] encryptedSessionKey = NTLMv2_EncryptSessionKey(sessionKey, creds, ntlmResponse);
 
             byte[] message = new byte[88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length + userName.Length + workstationName.Length + encryptedSessionKey.Length];
-            BitConverterLE.GetBytes(ntlmssp).CopyTo(message, 0);
-            BitConverterLE.GetBytes((uint)3).CopyTo(message, 8);
-            BitConverterLE.GetBytes((ushort)lanmanResponse.Length).CopyTo(message, 12);
-            BitConverterLE.GetBytes((ushort)lanmanResponse.Length).CopyTo(message, 14);
-            BitConverterLE.GetBytes((ushort)88).CopyTo(message, 16);
-            BitConverterLE.GetBytes((ushort)ntlmResponse.Length).CopyTo(message, 20);
-            BitConverterLE.GetBytes((ushort)ntlmResponse.Length).CopyTo(message, 22);
-            BitConverterLE.GetBytes((ushort)(88 + lanmanResponse.Length)).CopyTo(message, 24);
-            BitConverterLE.GetBytes((ushort)targetName.Length).CopyTo(message, 28);
-            BitConverterLE.GetBytes((ushort)targetName.Length).CopyTo(message, 30);
-            BitConverterLE.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length)).CopyTo(message, 32);
-            BitConverterLE.GetBytes((ushort)userName.Length).CopyTo(message, 36);
-            BitConverterLE.GetBytes((ushort)userName.Length).CopyTo(message, 38);
-            BitConverterLE.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length)).CopyTo(message, 40);
-            BitConverterLE.GetBytes((ushort)workstationName.Length).CopyTo(message, 44);
-            BitConverterLE.GetBytes((ushort)workstationName.Length).CopyTo(message, 46);
-            BitConverterLE.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length + userName.Length)).CopyTo(message, 48);
-            BitConverterLE.GetBytes((ushort)encryptedSessionKey.Length).CopyTo(message, 52);
-            BitConverterLE.GetBytes((ushort)encryptedSessionKey.Length).CopyTo(message, 54);
-            BitConverterLE.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length + userName.Length + workstationName.Length)).CopyTo(message, 56);
-            BitConverterLE.GetBytes(version).CopyTo(message, 64);
+            BitConverterLittleEndian.GetBytes(ntlmssp).CopyTo(message, 0);
+            BitConverterLittleEndian.GetBytes((uint)3).CopyTo(message, 8);
+            BitConverterLittleEndian.GetBytes((ushort)lanmanResponse.Length).CopyTo(message, 12);
+            BitConverterLittleEndian.GetBytes((ushort)lanmanResponse.Length).CopyTo(message, 14);
+            BitConverterLittleEndian.GetBytes((ushort)88).CopyTo(message, 16);
+            BitConverterLittleEndian.GetBytes((ushort)ntlmResponse.Length).CopyTo(message, 20);
+            BitConverterLittleEndian.GetBytes((ushort)ntlmResponse.Length).CopyTo(message, 22);
+            BitConverterLittleEndian.GetBytes((ushort)(88 + lanmanResponse.Length)).CopyTo(message, 24);
+            BitConverterLittleEndian.GetBytes((ushort)targetName.Length).CopyTo(message, 28);
+            BitConverterLittleEndian.GetBytes((ushort)targetName.Length).CopyTo(message, 30);
+            BitConverterLittleEndian.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length)).CopyTo(message, 32);
+            BitConverterLittleEndian.GetBytes((ushort)userName.Length).CopyTo(message, 36);
+            BitConverterLittleEndian.GetBytes((ushort)userName.Length).CopyTo(message, 38);
+            BitConverterLittleEndian.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length)).CopyTo(message, 40);
+            BitConverterLittleEndian.GetBytes((ushort)workstationName.Length).CopyTo(message, 44);
+            BitConverterLittleEndian.GetBytes((ushort)workstationName.Length).CopyTo(message, 46);
+            BitConverterLittleEndian.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length + userName.Length)).CopyTo(message, 48);
+            BitConverterLittleEndian.GetBytes((ushort)encryptedSessionKey.Length).CopyTo(message, 52);
+            BitConverterLittleEndian.GetBytes((ushort)encryptedSessionKey.Length).CopyTo(message, 54);
+            BitConverterLittleEndian.GetBytes((ushort)(88 + lanmanResponse.Length + ntlmResponse.Length + targetName.Length + userName.Length + workstationName.Length)).CopyTo(message, 56);
+            BitConverterLittleEndian.GetBytes(version).CopyTo(message, 64);
             lanmanResponse.CopyTo(message, 88);
             ntlmResponse.CopyTo(message, 88 + lanmanResponse.Length);
             targetName.CopyTo(message, 88 + lanmanResponse.Length + ntlmResponse.Length);
@@ -182,19 +182,19 @@
 
         internal static Tuple<bool, byte[]> AUTHENTICATE_MESSAGE(byte[] buffer, ulong serverChallenge, string serverName, AuthenticateClientDelegate auth)
         {
-            ushort targetnameLength = BitConverterLE.ToUShort(buffer, 28);
-            uint targetnameOffset = BitConverterLE.ToUInt(buffer, 32);
+            ushort targetnameLength = BitConverterLittleEndian.ToUShort(buffer, 28);
+            uint targetnameOffset = BitConverterLittleEndian.ToUInt(buffer, 32);
             byte[] targetName = new byte[targetnameLength];
             Array.Copy(buffer, targetnameOffset, targetName, 0, targetnameLength);
-            ushort usernameLength = BitConverterLE.ToUShort(buffer, 36);
-            uint usernameOffset = BitConverterLE.ToUInt(buffer, 40);
+            ushort usernameLength = BitConverterLittleEndian.ToUShort(buffer, 36);
+            uint usernameOffset = BitConverterLittleEndian.ToUInt(buffer, 40);
             byte[] userName = new byte[usernameLength];
             Array.Copy(buffer, usernameOffset, userName, 0, usernameLength);
 
             SmbClientCredentials creds = auth(Encoding.Unicode.GetString(targetName), Encoding.Unicode.GetString(userName));
 
-            ushort ntlmResponseLength = BitConverterLE.ToUShort(buffer, 20);
-            uint ntlmResponseOffset = BitConverterLE.ToUInt(buffer, 24);
+            ushort ntlmResponseLength = BitConverterLittleEndian.ToUShort(buffer, 20);
+            uint ntlmResponseOffset = BitConverterLittleEndian.ToUInt(buffer, 24);
             byte[] ntlmResponse = new byte[ntlmResponseLength];
             Array.Copy(buffer, ntlmResponseOffset, ntlmResponse, 0, ntlmResponseLength);
 
@@ -204,8 +204,8 @@
             byte[] proofStr = new byte[16];
             Array.Copy(ntlmResponse, 0, proofStr, 0, 16);
 
-            ushort eskLength = BitConverterLE.ToUShort(buffer, 52);
-            uint eskOffset = BitConverterLE.ToUInt(buffer, 56);
+            ushort eskLength = BitConverterLittleEndian.ToUShort(buffer, 52);
+            uint eskOffset = BitConverterLittleEndian.ToUInt(buffer, 56);
             byte[] encryptedSessionKey = new byte[eskLength];
             Array.Copy(buffer, eskOffset, encryptedSessionKey, 0, eskLength);
 
@@ -266,7 +266,7 @@
             byte[] buffer = new byte[((4 + name.Length) * 4) + 16];
 
             byte[] identical_parts = new byte[4 + name.Length];
-            BitConverterLE.GetBytes((ushort)name.Length).CopyTo(identical_parts, 2);
+            BitConverterLittleEndian.GetBytes((ushort)name.Length).CopyTo(identical_parts, 2);
             name.CopyTo(identical_parts, 4);
 
             // NetBIOS domain name
@@ -296,7 +296,7 @@
             buffer[offset++] = 0x00;
             buffer[offset++] = 0x08;
             buffer[offset++] = 0x00;
-            BitConverterLE.GetBytes(DateTime.Now.ToFileTime()).CopyTo(buffer, offset);
+            BitConverterLittleEndian.GetBytes(DateTime.Now.ToFileTime()).CopyTo(buffer, offset);
             offset += 8;
 
             // End of List
@@ -310,13 +310,13 @@
             byte[] ntlm2Hash = HMAC_MD5(ntlmHash, creds.Username.ToUpper() + creds.Domain);
 
             byte[] blob = new byte[32 + targetInfo.Length];
-            BitConverterLE.GetBytes((uint)0x00000101).CopyTo(blob, 0);
-            BitConverterLE.GetBytes(DateTime.Now.ToFileTime()).CopyTo(blob, 8);
+            BitConverterLittleEndian.GetBytes((uint)0x00000101).CopyTo(blob, 0);
+            BitConverterLittleEndian.GetBytes(DateTime.Now.ToFileTime()).CopyTo(blob, 8);
             clientNonce.CopyTo(blob, 16);
             targetInfo.CopyTo(blob, 28);
 
             byte[] hmac_blob = new byte[8 + blob.Length];
-            BitConverterLE.GetBytes(serverChallenge).CopyTo(hmac_blob, 0);
+            BitConverterLittleEndian.GetBytes(serverChallenge).CopyTo(hmac_blob, 0);
             blob.CopyTo(hmac_blob, 8);
             byte[] hmac_blob_done = HMAC_MD5(ntlm2Hash, hmac_blob);
 
@@ -335,7 +335,7 @@
             Array.Copy(response, 16, blob, 0, blob.Length);
 
             byte[] hmac_blob = new byte[8 + blob.Length];
-            BitConverterLE.GetBytes(serverChallenge).CopyTo(hmac_blob, 0);
+            BitConverterLittleEndian.GetBytes(serverChallenge).CopyTo(hmac_blob, 0);
             blob.CopyTo(hmac_blob, 8);
             byte[] hmac_blob_done = HMAC_MD5(ntlm2Hash, hmac_blob);
 

@@ -25,22 +25,22 @@
             byte[] buffer = new byte[32];
 
             // StructureSize (2 bytes)
-            BitConverterLE.GetBytes((ushort)32).CopyTo(buffer, 0);
+            BitConverterLittleEndian.GetBytes((ushort)32).CopyTo(buffer, 0);
 
             // Flags (2 bytes)
             if (this.WatchTree)
             {
-                BitConverterLE.GetBytes((ushort)0x0001).CopyTo(buffer, 2);
+                BitConverterLittleEndian.GetBytes((ushort)0x0001).CopyTo(buffer, 2);
             }
 
             // OutputBufferLength (4 bytes)
-            BitConverterLE.GetBytes(this.OutputBufferLength).CopyTo(buffer, 4);
+            BitConverterLittleEndian.GetBytes(this.OutputBufferLength).CopyTo(buffer, 4);
 
             // FileId (16 bytes)
             this.FileId.Flatten().CopyTo(buffer, 8);
 
             // CompletionFilter (4 bytes)
-            BitConverterLE.GetBytes((uint)this.CompletionFilter).CopyTo(buffer, 24);
+            BitConverterLittleEndian.GetBytes((uint)this.CompletionFilter).CopyTo(buffer, 24);
 
             // Reserved (4 bytes) - MUST NOT be used and MUST be reserved
             return buffer;
